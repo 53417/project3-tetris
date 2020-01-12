@@ -1,24 +1,14 @@
-# README
+# (not)Tetris
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This aims to be a Tetris clone
+* with the MP aspect of Tetris 99 and Cultris 2
 
-Things you may want to cover:
+# Goals
+[ ] Single Player Tetris (no backend)
+[ ] Tile velocity variable
+[ ] Player inputs update backend
+[ ] MP integration
+[ ] Update opponent views / score on input and tile movement
+[ ] High scores / scoreboard
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+soon TM
