@@ -494,15 +494,63 @@ export default class Sp_game extends React.Component {
     }
 
     active_down() {
-        var active_pieces = {};
+        var active_keys = [];
+        var active_cells = {};
+        const { board } = this.state;
 
         //draw cells
-        for(var key in this.state.board) {
-            if(key.state === "active") {
-                active_pieces.push(this.state.board.key)
+        for(var key in board) {
+            if(board[key].state === "active") {
+                active_keys.push(key);
+                active_cells[key] = board[key];
             }
-        }
+        };
+        
+        //update cells
+        // this.setState({
+        //     board: {
+        //         ...board, 
+        //         [active_keys[0]]: { 
+        //             ...board[c1],
+        //             state: "active",
+        //             line_top: true,
+        //             line_right: true,
+        //             line_bot: false,
+        //             line_left: true,
+        //             fill: col
+        //         },
+        //         [active_keys[1]]: { 
+        //             ...board[c2],
+        //             state: "active",
+        //             line_top: false,
+        //             line_right: true,
+        //             line_bot: true,
+        //             line_left: false,
+        //             fill: col
+        //         },
+        //         [active_keys[2]]: { 
+        //             ...board[c3],
+        //             state: "active",
+        //             line_top: true,
+        //             line_right: false,
+        //             line_bot: false,
+        //             line_left: true,
+        //             fill: col
+        //         },
+        //         [active_keys[3]]: { 
+        //             ...board[c4],
+        //             state: "active",
+        //             line_top: false,
+        //             line_right: true,
+        //             line_bot: true,
+        //             line_left: true,
+        //             fill: col
+        //         }
+        //     }
+        // });
 
+        console.log(active_keys)
+        console.log(active_cells)
     }
 
     //game board is 10 wide and 20 high
