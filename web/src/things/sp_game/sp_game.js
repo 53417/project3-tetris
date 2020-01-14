@@ -9,7 +9,7 @@ export default class Sp_game extends React.Component {
         this.state = {
             board: {},
             rows: 24,
-            cols: 10,
+            cols: 10
         };
     }
     
@@ -21,11 +21,12 @@ export default class Sp_game extends React.Component {
                 data[counter] = {
                     row: x,
                     col: y,
-                    state: empty, //empty, filled, active
+                    state: "empty", //empty, filled, active
                     line_top: false,
                     line_right: false,
                     line_bot: false,
                     line_left: false,
+                    fill: ''
                 };
                 counter += 1
             }
@@ -39,11 +40,14 @@ export default class Sp_game extends React.Component {
     board_render() {
         let c = document.getElementById('canvas');
         let ctx = c.getContext('2d');
-        let tileWidth = c.width / this.state.cols;
-        let tileHeight = c.height / this.state.rows;
 
         //clear everything
         ctx.clearRect(0, 0, c.width, c.height);
+
+        //draw cells
+        for(var key in this.state.board) {
+            this.cell_render(key)
+        }
 
         //draw outline
         ctx.beginPath();
@@ -54,6 +58,451 @@ export default class Sp_game extends React.Component {
         ctx.lineTo(0, 0)
         ctx.strokeStyle = "black";
         ctx.stroke();
+        
+        console.log(this.state.board)
+    }
+
+    cell_render(cell_id) {
+        /* Example cell data
+        row: 1
+        col: 1
+        state: "empty"
+        line_top: false
+        line_right: false
+        line_bot: false
+        line_left: false
+        fill: ""
+        */
+        let cell = this.state.board[cell_id];
+        let c = document.getElementById('canvas');
+        let ctx = c.getContext('2d');
+        let cell_width = c.width / this.state.cols;
+        let cell_height = c.height / this.state.rows;
+
+        let x1 = (cell.col - 1) * cell_width; // 0, 0
+        let y1 = (cell.row - 1) * cell_height;
+        let x2 = ((cell.col - 1) * cell_width) + cell_width; // 50, 0
+        let y2 = (cell.row - 1) * cell_height;
+        let x3 = ((cell.col - 1) * cell_width) + cell_width; //50, 50
+        let y3 = ((cell.row - 1) * cell_height) + cell_height;
+        let x4 = (cell.col - 1) * cell_width; //0, 50
+        let y4 = ((cell.row - 1) * cell_height) + cell_height;
+        
+        //outline
+        if(cell.line_top === true) {
+            this.draw_line(x1, y1, x2, y2)
+        };
+        if(cell.line_right === true) {
+            this.draw_line(x2, y2, x3, y3)
+        };
+        if(cell.line_bot === true) {
+            this.draw_line(x3, y3, x4, y4)
+        };
+        if(cell.line_left === true) {
+            this.draw_line(x4, y4, x1, y1)
+        };
+
+        //fill color
+        if(cell.fill !== "") {
+            ctx.beginPath();
+            ctx.rect(x1, y1, cell_width, cell_height);
+            ctx.fillStyle = cell.fill;
+            ctx.fill();
+        }
+        
+    }
+
+    draw_line(x, y, x2, y2) {
+        let c = document.getElementById('canvas');
+        let ctx = c.getContext('2d');
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+    }
+
+    piece_longboi(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 20;
+        var c4 = start_cell_id + 30;
+        const { board } = this.state;
+        const col = "cyan";
+
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    piece_mrt(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 11;
+        var c4 = start_cell_id + 20;
+        const { board } = this.state;
+        const col = "purple"
+
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: false,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    piece_phat(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 1;
+        var c4 = start_cell_id + 11;
+        const { board } = this.state;
+        const col = "yellow"
+        
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: false,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: false,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    piece_l(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 20;
+        var c4 = start_cell_id + 21;
+        const { board } = this.state;
+        const col = "orange"
+        
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: false,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    piece_bkl(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 20;
+        var c4 = start_cell_id + 19;
+        const { board } = this.state;
+        const col = "blue"
+        
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: false,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: true,
+                    line_right: false,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    piece_s(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 11;
+        var c4 = start_cell_id + 21;
+        const { board } = this.state;
+        const col = "green"
+        
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: false,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    piece_bks(start_cell_id) {
+        //cells to modify
+        var c1 = start_cell_id;
+        var c2 = start_cell_id + 10; 
+        var c3 = start_cell_id + 9;
+        var c4 = start_cell_id + 19;
+        const { board } = this.state;
+        const col = "red"
+        
+        //update cells
+        this.setState({
+            board: {
+                ...board, 
+                [c1]: { 
+                    ...board[c1],
+                    state: "active",
+                    line_top: true,
+                    line_right: true,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c2]: { 
+                    ...board[c2],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: false,
+                    fill: col
+                },
+                [c3]: { 
+                    ...board[c3],
+                    state: "active",
+                    line_top: true,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: true,
+                    fill: col
+                },
+                [c4]: { 
+                    ...board[c4],
+                    state: "active",
+                    line_top: false,
+                    line_right: true,
+                    line_bot: true,
+                    line_left: true,
+                    fill: col
+                }
+            }
+        });
+    }
+
+    active_down() {
+        var active_pieces = {};
+
+        //draw cells
+        for(var key in this.state.board) {
+            if(key.state === "active") {
+                active_pieces.push(this.state.board.key)
+            }
+        }
+
     }
 
     //game board is 10 wide and 20 high
@@ -67,7 +516,19 @@ export default class Sp_game extends React.Component {
             <>
             <h1>SinglePlayer</h1>
             <Button variant="primary" onClick={() => this.board_generate_data()}>generate board data</Button>
-            <Button variant="primary" onClick={() => this.board_render()}>render board</Button>
+            <Button variant="success" onClick={() => this.board_render()}>render board</Button>
+            <br></br>
+            <br></br>
+            <Button variant="primary" onClick={() => this.piece_longboi(5)}>input longboi</Button>
+            <Button variant="primary" onClick={() => this.piece_mrt(7)}>input mrt</Button>
+            <Button variant="primary" onClick={() => this.piece_phat(52)}>input phat</Button>
+            <Button variant="primary" onClick={() => this.piece_l(57)}>input l</Button>
+            <Button variant="primary" onClick={() => this.piece_bkl(82)}>input bkl</Button>
+            <Button variant="primary" onClick={() => this.piece_s(112)}>input s</Button>
+            <Button variant="primary" onClick={() => this.piece_bks(117)}>input bks</Button>
+            <br></br>
+            <br></br>
+            <Button variant="primary" onClick={() => this.active_down()}>active down 1</Button>
             <br></br>
             <br></br>
             <canvas id="canvas" width="250" height="600"></canvas>
