@@ -12,6 +12,12 @@ export default class Sp_game extends React.Component {
             cols: 10
         };
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.board.size !== this.state.board.size) {
+            console.log('hello there')
+        }
+    };
     
     board_generate_data() {
         var data = {};
@@ -26,7 +32,7 @@ export default class Sp_game extends React.Component {
                     line_right: false,
                     line_bot: false,
                     line_left: false,
-                    fill: ''
+                    fill: ""
                 };
                 counter += 1
             }
@@ -63,16 +69,6 @@ export default class Sp_game extends React.Component {
     }
 
     cell_render(cell_id) {
-        /* Example cell data
-        row: 1
-        col: 1
-        state: "empty"
-        line_top: false
-        line_right: false
-        line_bot: false
-        line_left: false
-        fill: ""
-        */
         let cell = this.state.board[cell_id];
         let c = document.getElementById('canvas');
         let ctx = c.getContext('2d');
@@ -455,7 +451,7 @@ export default class Sp_game extends React.Component {
                 ...board, 
                 [c1]: { 
                     ...board[c1],
-                    state: "active",
+                    state: "empty",
                     line_top: true,
                     line_right: true,
                     line_bot: false,
@@ -464,7 +460,7 @@ export default class Sp_game extends React.Component {
                 },
                 [c2]: { 
                     ...board[c2],
-                    state: "active",
+                    state: "empty",
                     line_top: false,
                     line_right: true,
                     line_bot: true,
@@ -473,7 +469,7 @@ export default class Sp_game extends React.Component {
                 },
                 [c3]: { 
                     ...board[c3],
-                    state: "active",
+                    state: "empty",
                     line_top: true,
                     line_right: false,
                     line_bot: false,
@@ -482,7 +478,7 @@ export default class Sp_game extends React.Component {
                 },
                 [c4]: { 
                     ...board[c4],
-                    state: "active",
+                    state: "empty",
                     line_top: false,
                     line_right: true,
                     line_bot: true,
@@ -501,56 +497,98 @@ export default class Sp_game extends React.Component {
         //draw cells
         for(var key in board) {
             if(board[key].state === "active") {
-                active_keys.push(key);
+                active_keys.push(parseInt(key));
                 active_cells[key] = board[key];
             }
         };
-        
-        //update cells
-        // this.setState({
-        //     board: {
-        //         ...board, 
-        //         [active_keys[0]]: { 
-        //             ...board[c1],
-        //             state: "active",
-        //             line_top: true,
-        //             line_right: true,
-        //             line_bot: false,
-        //             line_left: true,
-        //             fill: col
-        //         },
-        //         [active_keys[1]]: { 
-        //             ...board[c2],
-        //             state: "active",
-        //             line_top: false,
-        //             line_right: true,
-        //             line_bot: true,
-        //             line_left: false,
-        //             fill: col
-        //         },
-        //         [active_keys[2]]: { 
-        //             ...board[c3],
-        //             state: "active",
-        //             line_top: true,
-        //             line_right: false,
-        //             line_bot: false,
-        //             line_left: true,
-        //             fill: col
-        //         },
-        //         [active_keys[3]]: { 
-        //             ...board[c4],
-        //             state: "active",
-        //             line_top: false,
-        //             line_right: true,
-        //             line_bot: true,
-        //             line_left: true,
-        //             fill: col
-        //         }
-        //     }
-        // });
 
-        console.log(active_keys)
-        console.log(active_cells)
+        //setState * 8
+        this.setState({
+            board: {
+                ...board,[active_keys[0]]: { 
+                    row: board[active_keys[0]].row,
+                    col: board[active_keys[0]].col,
+                    state: "empty",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: false,
+                    fill: ""
+                },
+                [active_keys[1]]: {
+                    row: board[active_keys[1]].row,
+                    col: board[active_keys[1]].col,
+                    state: "empty",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: false,
+                    fill: ""
+                },
+                [active_keys[2]]: {
+                    row: board[active_keys[2]].row,
+                    col: board[active_keys[2]].col,
+                    state: "empty",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: false,
+                    fill: ""
+                },
+                [active_keys[3]]: {
+                    row: board[active_keys[3]].row,
+                    col: board[active_keys[3]].col,
+                    state: "empty",
+                    line_top: false,
+                    line_right: false,
+                    line_bot: false,
+                    line_left: false,
+                    fill: ""
+                },
+                [active_keys[0] + 10]: { 
+                    row: board[active_keys[0] + 10].row,
+                    col: board[active_keys[0] + 10].col,
+                    state: "active",
+                    line_top: active_cells[active_keys[0]].line_top,
+                    line_right: active_cells[active_keys[0]].line_right,
+                    line_bot: active_cells[active_keys[0]].line_bot,
+                    line_left: active_cells[active_keys[0]].line_left,
+                    fill: active_cells[active_keys[0]].col
+                },
+                [active_keys[1] + 10]: {
+                    row: board[active_keys[1] + 10].row,
+                    col: board[active_keys[1] + 10].col,
+                    state: "active",
+                    line_top: active_cells[active_keys[1]].line_top,
+                    line_right: active_cells[active_keys[1]].line_right,
+                    line_bot: active_cells[active_keys[1]].line_bot,
+                    line_left: active_cells[active_keys[1]].line_left,
+                    fill: active_cells[active_keys[1]].col
+                },
+                [active_keys[2] + 10]: {
+                    row: board[active_keys[2] + 10].row,
+                    col: board[active_keys[2] + 10].col,
+                    state: "active",
+                    line_top: active_cells[active_keys[2]].line_top,
+                    line_right: active_cells[active_keys[2]].line_right,
+                    line_bot: active_cells[active_keys[2]].line_bot,
+                    line_left: active_cells[active_keys[2]].line_left,
+                    fill: active_cells[active_keys[2]].col
+                },
+                [active_keys[3] + 10]: {
+                    row: board[active_keys[3] + 10].row,
+                    col: board[active_keys[3] + 10].col,
+                    state: "active",
+                    line_top: active_cells[active_keys[3]].line_top,
+                    line_right: active_cells[active_keys[3]].line_right,
+                    line_bot: active_cells[active_keys[3]].line_bot,
+                    line_left: active_cells[active_keys[3]].line_left,
+                    fill: active_cells[active_keys[3]].col
+                }
+            }
+        }, () => {
+            this.board_render();
+        });
     }
 
     //game board is 10 wide and 20 high
@@ -567,19 +605,19 @@ export default class Sp_game extends React.Component {
             <Button variant="success" onClick={() => this.board_render()}>render board</Button>
             <br></br>
             <br></br>
-            <Button variant="primary" onClick={() => this.piece_longboi(5)}>input longboi</Button>
-            <Button variant="primary" onClick={() => this.piece_mrt(7)}>input mrt</Button>
-            <Button variant="primary" onClick={() => this.piece_phat(52)}>input phat</Button>
-            <Button variant="primary" onClick={() => this.piece_l(57)}>input l</Button>
-            <Button variant="primary" onClick={() => this.piece_bkl(82)}>input bkl</Button>
-            <Button variant="primary" onClick={() => this.piece_s(112)}>input s</Button>
-            <Button variant="primary" onClick={() => this.piece_bks(117)}>input bks</Button>
+            <Button variant="primary" onClick={() => this.piece_longboi(4)}>input longboi</Button>
+            <Button variant="primary" onClick={() => this.piece_mrt(4)}>input mrt</Button>
+            <Button variant="primary" onClick={() => this.piece_phat(4)}>input phat</Button>
+            <Button variant="primary" onClick={() => this.piece_l(4)}>input l</Button>
+            <Button variant="primary" onClick={() => this.piece_bkl(5)}>input bkl</Button>
+            <Button variant="primary" onClick={() => this.piece_s(4)}>input s</Button>
+            <Button variant="primary" onClick={() => this.piece_bks(5)}>input bks</Button>
             <br></br>
             <br></br>
             <Button variant="primary" onClick={() => this.active_down()}>active down 1</Button>
             <br></br>
             <br></br>
-            <canvas id="canvas" width="250" height="600"></canvas>
+            <canvas id="canvas" width="250" height="600"></canvas>;
             </>
         );
     }
