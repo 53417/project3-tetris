@@ -11,9 +11,22 @@ export default class Sp_game extends React.Component {
             rows: 24,
             cols: 10,
             active_piece_name: '',
-            active_piece_direction: 0,
+            active_piece_direction: '',
         };
     }
+
+    // const map = {
+    //     long: {
+    //         f0t1: [9,0,-9,-18],
+    //         f1t2: [-9,0,9,18],
+    //         f2t3: [9,0,-9,18],
+    //         f3t0: [-9,0,9,18],
+    //         f0t3: [9,0,-9,-18],
+    //         f1t0: [-9,0,9,18],
+    //         f2t1: [9,0,-9,-18],
+    //         f3t2: [-9,0,9,18]
+    //     }
+    // }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.board.size !== this.state.board.size) {
@@ -120,7 +133,7 @@ export default class Sp_game extends React.Component {
         ctx.stroke();
     }
 
-    piece_longboi(start_cell_id) {
+    piece_long(start_cell_id) {
         //cells to modify
         var c1 = start_cell_id;
         var c2 = start_cell_id + 10; 
@@ -136,40 +149,26 @@ export default class Sp_game extends React.Component {
                 [c1]: { 
                     ...board[c1],
                     state: "active",
-                    line_top: true,
-                    line_right: true,
-                    line_bot: false,
-                    line_left: true,
                     fill: col
                 },
                 [c2]: { 
                     ...board[c2],
                     state: "active",
-                    line_top: false,
-                    line_right: true,
-                    line_bot: false,
-                    line_left: true,
                     fill: col
                 },
                 [c3]: { 
                     ...board[c3],
                     state: "active",
-                    line_top: false,
-                    line_right: true,
-                    line_bot: false,
-                    line_left: true,
                     fill: col
                 },
                 [c4]: { 
                     ...board[c4],
                     state: "active",
-                    line_top: false,
-                    line_right: true,
-                    line_bot: true,
-                    line_left: true,
                     fill: col
                 }
-            }
+            },
+            active_piece_name: "long",
+            active_piece_direction: "0"
         });
     }
 
@@ -743,16 +742,104 @@ export default class Sp_game extends React.Component {
     }
 
     player_drop_piece() {
-
     }
 
     player_down_piece() {
+    }
 
+    rotate_test(piece, start, end) {
+        const map = {
+            long01: [9,0,-9,-18],
+            long12: [-9,0,9,18],
+            long23: [9,0,-9,18],
+            long30: [-9,0,9,18],
+            long03: [9,0,-9,-18],
+            long10: [-9,0,9,18],
+            long21: [9,0,-9,-18],
+            long32: [-9,0,9,18],
+            mrt01: [11,0,-11,9],
+            mrt12: [9,0,-9,-11],
+            mrt23: [-11,0,11,-9],
+            mrt30: [-9,0,9,11],
+            mrt03: [9,0,-9,-11],
+            mrt10: [-11,0,11,-9],
+            mrt21: [-9,0,9,11],
+            mrt32: [11,0,-11,9],
+            phat01: [0,0,0,0],
+            phat12: [0,0,0,0],
+            phat23: [0,0,0,0],
+            phat30: [0,0,0,0],
+            phat03: [0,0,0,0],
+            phat10: [0,0,0,0],
+            phat21: [0,0,0,0],
+            phat32: [0,0,0,0],
+            l01: [11,0,-11,-2],
+            l12: [9,0,-9,-20],
+            l23: [-11,0,11,2],
+            l30: [-9,0,9,20],
+            l03: [9,0,-9,-20],
+            l10: [-11,0,11,2],
+            l21: [-9,0,9,20],
+            l32: [11,0,-11,-2],
+            bkl01: [11,0,-11,-20],
+            bkl12: [9,0,-9,2],
+            bkl23: [-22,-12,-2,-3],
+            bkl30: [2,12,22,21],
+            bkl03: [-2,-12,-22,-21],
+            bkl10: [-11,0,11,20],
+            bkl21: [-9,0,9,-2],
+            bkl32: [22,12,2,3],
+            s01: [1,-10,-1,-12],
+            s12: [-1,10,1,12],
+            s23: [1,-10,-1,-12],
+            s30: [-1,10,1,12],
+            s03: [1,-10,-1,-12],
+            s10: [-1,10,1,12],
+            s21: [1,-10,-1,-12],
+            s32: [-1,10,1,12],
+            bks01: [10,-1,-10,-21],
+            bks12: [-10,1,10,21],
+            bks23: [10,-1,-10,-21],
+            bks30: [-10,1,10,21],
+            bks03: [10,-1,-10,-21],
+            bks10: [-10,1,10,21],
+            bks21: [10,-1,-10,-21],
+            bks32: [-10,1,10,21]
+        }
+        console.log(map);
+        var active_keys = [];
+        const { board } = this.state;
+
+        //get active cells
+        for(var key in board) {
+            if(board[key].state === "active") {
+                active_keys.push(parseInt(key));
+            }
+        };
+
+        // move cells
+        var str = piece + start + end;
+        var moveset = map[str];
+
+        console.log(str);
+        console.log(moveset);
+
+        var a1 = active_keys[0];
+        var a2 = active_keys[1];
+        var a3 = active_keys[2];
+        var a4 = active_keys[3];
+        var b1 = active_keys[0] + moveset[0];
+        var b2 = active_keys[1] + moveset[1];
+        var b3 = active_keys[2] + moveset[2];
+        var b4 = active_keys[3] + moveset[3];
+
+        this.update_static_cells(a1, a2, a3, a4, b1, b2, b3, b4)
     }
 
     // maybe have which piece is active in the state as well as its rotation position to determine cell updates
-    player_rotate_left() {
-
+    player_rotate_left(a1, a2, a3, a4) {
+        // piece = this.active_piece_name;
+        // if(piece == long_boi)
     }
 
     player_rotate_right() {
@@ -782,7 +869,7 @@ export default class Sp_game extends React.Component {
             <Button variant="success" onClick={() => this.board_render()}>render board</Button>
             <br></br>
             <br></br>
-            <Button variant="primary" onClick={() => this.piece_longboi(4)}>input longboi</Button>
+            <Button variant="primary" onClick={() => this.piece_long(4)}>input long</Button>
             <Button variant="primary" onClick={() => this.piece_mrt(4)}>input mrt</Button>
             <Button variant="primary" onClick={() => this.piece_phat(4)}>input phat</Button>
             <Button variant="primary" onClick={() => this.piece_l(4)}>input l</Button>
@@ -794,6 +881,9 @@ export default class Sp_game extends React.Component {
             <Button variant="primary" onClick={() => this.player_move_left()}>move left 1</Button>
             <Button variant="primary" onClick={() => this.active_down()}>active down 1</Button>
             <Button variant="primary" onClick={() => this.player_move_right()}>move right 1</Button>
+            <br></br>
+            <br></br>
+            <Button variant="primary" onClick={() => this.rotate_test('long', 0, 1)}>piece rotate calc</Button>
             <br></br>
             <br></br>
             <canvas id="canvas" width="250" height="600"></canvas>;
